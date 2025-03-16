@@ -14,5 +14,7 @@ namespace PetHaven.Data.Repositories.Interfaces
         Task<User?> GetUserByEmailAsync(string email);
 
         Task AddUserAsync(User user);
+
+        Task UpdateUserAsync(User user);
     }
 }

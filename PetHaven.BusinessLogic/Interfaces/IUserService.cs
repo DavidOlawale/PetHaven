@@ -9,6 +9,11 @@ namespace PetHaven.BusinessLogic.Interfaces
 {
     public interface IUserService
     {
-        User? GetUser(string email);
+        Task<User?> GetUserByIdAsync(int id);
+
+        Task<User?> GetUserByEmailAsync(string email);
+
+        Task<bool> UpdateUserAsync(User updatedUser);
+
     }
 }

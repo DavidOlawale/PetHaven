@@ -7,11 +7,8 @@ using System.Threading.Tasks;
 
 namespace PetHaven.Data.Model
 {
-    public class User
+    public class User: BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
-
         public required string FirstName { get; set; }
 
         public required string LastName { get; set; }

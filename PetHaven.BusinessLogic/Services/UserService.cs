@@ -1,6 +1,7 @@
 ﻿using PetHaven.API.Data;
 using PetHaven.BusinessLogic.Interfaces;
 using PetHaven.Data.Model;
+using PetHaven.Data.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,17 +12,39 @@ namespace PetHaven.BusinessLogic.Services
 {
     public class UserService: IUserService
     {
-        private readonly List<User> _users;
-        private readonly AppDbContext _dbContext;
+        private readonly IUserRepository _userRepository;
 
-        public UserService(AppDbContext dbContext)
+        public UserService(IUserRepository userRepository)
         {
-            this._dbContext = dbContext;
+            _userRepository = userRepository;
         }
 
-        public User? GetUser(string email)
+        public async Task<User?> GetUserByIdAsync(int id)
         {
-            return _dbContext.Users.SingleOrDefault(u => u.Email == email);
+            return await _userRepository.GetUserByIdAsync(id);
+        }
+
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            return await _userRepository.GetUserByEmailAsync(email);
+        }
+
+
+        public async Task<bool> UpdateUserAsync(User updatedUser)
+        {
+            var existingUser = await _userRepository.GetUserByIdAsync(updatedUser.Id);
+            if (existingUser == null)
+            {
+                return false;
+            }
+
+            existingUser.FirstName = updatedUser.FirstName;
+            existingUser.LastName = updatedUser.LastName;
+            existingUser.ZipCode = updatedUser.ZipCode;
+            existingUser.Email = updatedUser.Email;
+            
+            await _userRepository.UpdateUserAsync(existingUser);
+            return true;
         }
     }
 }

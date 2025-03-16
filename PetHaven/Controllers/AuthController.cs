@@ -25,7 +25,7 @@ namespace PetHaven.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDTO request)
         {
-            var user = _UserService.GetUser(request.Email);
+            var user = await _UserService.GetUserByEmailAsync(request.Email);
 
             if (user is not null && _authService.VerifyPasswordHash(user, request.Password, user!.PasswordHash))
             {
