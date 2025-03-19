@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PetHaven.BusinessLogic.DTOs.User;
 using PetHaven.BusinessLogic.Interfaces;
 using PetHaven.Data.Model;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 namespace PetHaven.Controllers
 {
     [ApiController]
-    [Route("api/users")]
+    [Route("api/user")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -28,9 +29,9 @@ namespace PetHaven.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser([Required] int id, [FromBody] User updatedUser)
+        public async Task<IActionResult> UpdateUser([Required] int id, [FromBody] UpdateUserDTO updatedUser)
         {
-            var result = await _userService.UpdateUserAsync(updatedUser);
+            var result = await _userService.UpdateUserAsync(id, updatedUser);
             if (!result)
             {
                 return NotFound();

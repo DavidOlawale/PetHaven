@@ -1,4 +1,5 @@
 ﻿using PetHaven.API.Data;
+using PetHaven.BusinessLogic.DTOs.User;
 using PetHaven.BusinessLogic.Interfaces;
 using PetHaven.Data.Model;
 using PetHaven.Data.Repositories.Interfaces;
@@ -30,18 +31,17 @@ namespace PetHaven.BusinessLogic.Services
         }
 
 
-        public async Task<bool> UpdateUserAsync(User updatedUser)
+        public async Task<bool> UpdateUserAsync(int id, UpdateUserDTO updatedUser)
         {
-            var existingUser = await _userRepository.GetUserByIdAsync(updatedUser.Id);
+            var existingUser = await _userRepository.GetUserByIdAsync(id);
             if (existingUser == null)
             {
                 return false;
             }
 
-            existingUser.FirstName = updatedUser.FirstName;
-            existingUser.LastName = updatedUser.LastName;
-            existingUser.ZipCode = updatedUser.ZipCode;
-            existingUser.Email = updatedUser.Email;
+            existingUser.FirstName = updatedUser.FirstName ?? existingUser.FirstName;
+            existingUser.LastName = updatedUser.LastName ?? existingUser.LastName;
+            existingUser.ZipCode = updatedUser.ZipCode  ?? existingUser.ZipCode;
             
             await _userRepository.UpdateUserAsync(existingUser);
             return true;

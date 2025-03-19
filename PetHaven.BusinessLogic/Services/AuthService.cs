@@ -40,6 +40,11 @@ namespace PetHaven.BusinessLogic.Services
             return user;
         }
 
+        public async Task<bool> CheckEmailExists(string email)
+        {
+            return (await _userRepository.GetUserByEmailAsync(email)) != null;
+        }
+
         public string CreatePasswordHash(User user, string password)
         {
             return _passwordHasher.HashPassword(user, password);

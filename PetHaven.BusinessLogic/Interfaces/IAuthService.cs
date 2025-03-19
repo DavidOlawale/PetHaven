@@ -13,5 +13,6 @@ namespace PetHaven.BusinessLogic.Interfaces
         Task<User> RegisterAsync(User user, string password);
         string CreatePasswordHash(User user, string password);
         bool VerifyPasswordHash(User user, string password, string storedHash);
+        Task<bool> CheckEmailExists(string email);
     }
 }

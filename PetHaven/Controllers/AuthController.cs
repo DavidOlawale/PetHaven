@@ -36,8 +36,8 @@ namespace PetHaven.Controllers
             return Unauthorized();
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(SignUpDTO request)
+        [HttpPost("signup")]
+        public async Task<IActionResult> SignUp(SignUpDTO request)
         {
             var user = new User
             { 
@@ -48,7 +48,19 @@ namespace PetHaven.Controllers
                 Role = UserRoles.AppUser
             };
             var registeredUser = await _authService.RegisterAsync(user, request.Password);
-            return Created();
+            var token = _jwtService.GenerateToken(registeredUser);
+            return Ok(new { token });
+        }
+
+        [HttpGet("check-email")]
+        public async Task<bool> CheckEmailExists([FromQuery] string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return false;
+            }
+
+            return await _authService.CheckEmailExists(email);
         }
     }
 

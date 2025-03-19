@@ -1,4 +1,5 @@
-﻿using PetHaven.Data.Model;
+﻿using PetHaven.BusinessLogic.DTOs.User;
+using PetHaven.Data.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace PetHaven.BusinessLogic.Interfaces
 
         Task<User?> GetUserByEmailAsync(string email);
 
-        Task<bool> UpdateUserAsync(User updatedUser);
+        Task<bool> UpdateUserAsync(int id, UpdateUserDTO updatedUser);
 
     }
 }
