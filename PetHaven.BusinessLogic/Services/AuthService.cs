@@ -33,6 +33,10 @@ namespace PetHaven.BusinessLogic.Services
 
         public async Task<User> RegisterAsync(User user, string password)
         {
+            if((await _userRepository.GetUserByEmailAsync(user.Email)) != null){
+                throw new Exception("Email already exists");
+            }
+
             var passwordHash = CreatePasswordHash(user, password);
             user.PasswordHash = passwordHash;
             

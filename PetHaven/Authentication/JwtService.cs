@@ -28,7 +28,7 @@ namespace PetHaven.Authentication
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Role, user.Role)
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(15),
+                Expires = DateTime.UtcNow.AddHours(6),
                 Issuer = _options.Issuer,
                 Audience = _options.Audience,
                 SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
