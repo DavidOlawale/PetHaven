@@ -4,6 +4,7 @@ using PetHaven.BusinessLogic.DTOs;
 using PetHaven.BusinessLogic.DTOs.User;
 using PetHaven.BusinessLogic.Interfaces;
 using PetHaven.Data.Model;
+using System.Collections;
 using System.ComponentModel.DataAnnotations;
 
 namespace PetHaven.Controllers
@@ -75,11 +76,23 @@ namespace PetHaven.Controllers
             return Ok(createdImmunization);
         }
 
-        [HttpPost("Checkup")]
-        public async Task<IActionResult> AddCheckup(Checkup checkup)
+        [HttpGet("{petId}/Immunizations")]
+        public IEnumerable<Immunization> GetPetImmunization(int petId)
         {
-            var createdCheckup = await _petService.AddPetCheckupAsync(checkup);
-            return Ok(createdCheckup);
+            return _petService.GetPetImmunizations(petId);
+        }
+
+        [HttpPost("Medication")]
+        public async Task<IActionResult> AddMedication(Medication medication)
+        {
+            var createdMedication = await _petService.AddPetMedicationAsync(medication);
+            return Ok(createdMedication);
+        }
+
+        [HttpGet("{petId}/Medications")]
+        public IEnumerable<Medication> GetPetMedication(int petId)
+        {
+            return _petService.GetPetMedications(petId);
         }
 
         [HttpPost("Appointment")]
@@ -87,6 +100,13 @@ namespace PetHaven.Controllers
         {
             var createdAppointment = await _petService.AddPetAppointmentAsync(appointment);
             return Ok(createdAppointment);
+        }
+
+
+        [HttpPost("Appointments")]
+        public IEnumerable<Appointment> GetPetAppointments(int petId)
+        {
+            return _petService.GetPetAppointments(petId);
         }
     }
 }

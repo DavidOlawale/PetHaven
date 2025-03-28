@@ -1,8 +1,8 @@
-﻿namespace PetHaven.Authentication
+﻿namespace PetHaven.Data.Model
 {
     public static class UserRoles
     {
-        public static string AppUser = "AppUser";
+        public static string PetOwner = "PetOwner";
         public static string Administator = "Administator";
     }
 }

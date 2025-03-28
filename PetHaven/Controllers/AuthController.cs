@@ -45,7 +45,7 @@ namespace PetHaven.Controllers
                 LastName = request.LastName,
                 Email = request.Email,
                 ZipCode = request.ZipCode,
-                Role = UserRoles.AppUser
+                Role = UserRoles.PetOwner
             };
             var registeredUser = await _authService.RegisterAsync(user, request.Password);
             var token = _jwtService.GenerateToken(registeredUser);

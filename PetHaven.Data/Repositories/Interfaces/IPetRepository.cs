@@ -15,7 +15,11 @@ namespace PetHaven.Data.Repositories.Interfaces
         Task UpdatePetAsync(Pet pet);
         Task DeletePetAsync(int id);
         Task<Immunization> AddPetImmunizationAsync(Immunization immunization);
-        Task<Checkup> AddPetCheckupAsync(Checkup checkup);
+        Task<Medication> AddPetMedicationAsync(Medication medication);
         Task<Appointment> AddPetAppointmentAsync(Appointment appointment);
+
+        IEnumerable<Immunization> GetPetImmunizations(int petId);
+        IEnumerable<Medication> GetPetMedications(int petId);
+        IEnumerable<Appointment> GetPetAppointments(int petId);
     }
 }

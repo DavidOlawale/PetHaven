@@ -59,9 +59,9 @@ namespace PetHaven.Data.Repositories
             return immunization;
         }
 
-        public async Task<Checkup> AddPetCheckupAsync(Checkup checkup)
+        public async Task<Medication> AddPetMedicationAsync(Medication checkup)
         {
-            _context.Checkups.Update(checkup);
+            _context.Medications.Update(checkup);
             await _context.SaveChangesAsync();
             return checkup;
         }
@@ -70,6 +70,19 @@ namespace PetHaven.Data.Repositories
             _context.Appointments.Update(appointment);
             await _context.SaveChangesAsync();
             return appointment;
+        }
+
+        public IEnumerable<Immunization> GetPetImmunizations(int petId)
+        {
+            return _context.Immunizations.Where(i => i.PetId == petId).ToList();
+        }
+        public IEnumerable<Medication> GetPetMedications(int petId)
+        {
+            return _context.Medications.Where(i => i.PetId == petId).ToList();
+        }
+        public IEnumerable<Appointment> GetPetAppointments(int petId)
+        {
+            return _context.Appointments.Where(i => i.PetId == petId).ToList();
         }
     }
 }
