@@ -1,5 +1,4 @@
-﻿using PetHaven.API.Data;
-using PetHaven.BusinessLogic.DTOs.User;
+﻿using PetHaven.BusinessLogic.DTOs.User;
 using PetHaven.BusinessLogic.Interfaces;
 using PetHaven.Data.Model;
 using PetHaven.Data.Repositories.Interfaces;

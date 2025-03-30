@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetHaven.Data.Model;
 
@@ -11,9 +12,11 @@ using PetHaven.Data.Model;
 namespace PetHaven.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250329121339_Add_Tables_Product_Order_OrderItem")]
+    partial class Add_Tables_Product_Order_OrderItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,37 +104,6 @@ namespace PetHaven.Data.Migrations
                     b.HasIndex("PetId");
 
                     b.ToTable("Checkup");
-                });
-
-            modelBuilder.Entity("PetHaven.Data.Model.ForumComment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ForumThreadId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ForumThreadId");
-
-                    b.ToTable("ForumComments");
-                });
-
-            modelBuilder.Entity("PetHaven.Data.Model.ForumThread", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ForumThreads");
                 });
 
             modelBuilder.Entity("PetHaven.Data.Model.Immunization", b =>
@@ -370,95 +342,6 @@ namespace PetHaven.Data.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("PetHaven.Data.Model.Reminder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Notes")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("PetId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ReminderDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<TimeSpan?>("ReminderTime")
-                        .HasColumnType("time(6)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PetId");
-
-                    b.ToTable("Reminders");
-                });
-
-            modelBuilder.Entity("PetHaven.Data.Model.Resource", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Author")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasMaxLength(2048)
-                        .HasColumnType("varchar(2048)");
-
-                    b.Property<DateTime>("PublishedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatorId");
-
-                    b.ToTable("Resources");
-                });
-
             modelBuilder.Entity("PetHaven.Data.Model.User", b =>
                 {
                     b.Property<int>("Id")
@@ -502,7 +385,7 @@ namespace PetHaven.Data.Migrations
                             Email = "pethaven_superadmin@gmail.com",
                             FirstName = "David",
                             LastName = "Olaniran",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEaJzj8wZTuZebq49iWNmK/gqjbzSs1hTL2VoE6lekk1QmNqUrX+pWc/x6GS8nw/kQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAED+x4fIT+lzubd8HPe4Jf32uCs3x1fExLnjHjVVzD9prD+TwmrO4KzTkp/tah+uFow==",
                             Role = "Administrator",
                             ZipCode = "10027"
                         });
@@ -528,17 +411,6 @@ namespace PetHaven.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Pet");
-                });
-
-            modelBuilder.Entity("PetHaven.Data.Model.ForumComment", b =>
-                {
-                    b.HasOne("PetHaven.Data.Model.ForumThread", "ForumThread")
-                        .WithMany()
-                        .HasForeignKey("ForumThreadId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ForumThread");
                 });
 
             modelBuilder.Entity("PetHaven.Data.Model.Immunization", b =>
@@ -596,28 +468,6 @@ namespace PetHaven.Data.Migrations
                         .HasForeignKey("OwnerId");
 
                     b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("PetHaven.Data.Model.Reminder", b =>
-                {
-                    b.HasOne("PetHaven.Data.Model.Pet", "Pet")
-                        .WithMany()
-                        .HasForeignKey("PetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Pet");
-                });
-
-            modelBuilder.Entity("PetHaven.Data.Model.Resource", b =>
-                {
-                    b.HasOne("PetHaven.Data.Model.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("PetHaven.Data.Model.Order", b =>

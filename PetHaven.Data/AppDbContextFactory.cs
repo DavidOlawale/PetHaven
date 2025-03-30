@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace PetHaven.API.Data;
+namespace PetHaven.Data.Model;
 
 public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {

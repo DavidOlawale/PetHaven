@@ -40,5 +40,16 @@ namespace PetHaven.BusinessLogic.Services
 
             return blobClient.Uri.ToString();
         }
+
+        public async Task<string> UploadImageAsync(string image, string? fileName = null)
+        {
+            // Remove the prefix (e.g., "data:image/jpeg;base64,")
+            var base64Data = image.Split(',')[1];
+
+            // Convert Base64 to byte array
+            var imageBytes = Convert.FromBase64String(base64Data);
+            var imageStream = new MemoryStream(imageBytes);
+            return await UploadImageAsync(imageStream, fileName);
+        }
     }
 }

@@ -57,7 +57,7 @@ namespace PetHaven.BusinessLogic.Services
         public bool VerifyPasswordHash(User user, string password, string passwordHash)
         {
             var result = _passwordHasher.VerifyHashedPassword(user, passwordHash, password);
-            return result == PasswordVerificationResult.Success;
+            return result == PasswordVerificationResult.Success || result == PasswordVerificationResult.SuccessRehashNeeded;
         }
     }
 }

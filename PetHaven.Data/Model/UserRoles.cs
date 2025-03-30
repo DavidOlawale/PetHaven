@@ -3,6 +3,6 @@
     public static class UserRoles
     {
         public static string PetOwner = "PetOwner";
-        public static string Administator = "Administator";
+        public static string Administrator = "Administrator";
     }
 }
