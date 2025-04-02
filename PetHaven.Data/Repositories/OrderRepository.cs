@@ -28,8 +28,9 @@ namespace PetHaven.Data.Repositories
         public async Task<Order?> GetByIdAsync(int id)
         {
             return await _context.Orders
-                .Include(o => o.Items)
                 .Include(o => o.User)
+                .Include(o => o.Items)
+                .ThenInclude(i => i.Product)
                 .FirstOrDefaultAsync(o => o.Id == id);
         }
 

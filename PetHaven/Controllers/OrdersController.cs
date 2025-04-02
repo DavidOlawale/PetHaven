@@ -15,10 +15,12 @@ namespace PetHaven.Controllers
     public class OrdersController : BaseController
     {
         private readonly IOrderService _orderService;
+        private readonly IUserService _userService;
 
-        public OrdersController(IOrderService orderService)
+        public OrdersController(IOrderService orderService, IUserService userService)
         {
             _orderService = orderService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -32,6 +34,7 @@ namespace PetHaven.Controllers
         public async Task<ActionResult<Order>> GetOrder(int id)
         {
             var order = await _orderService.GetOrderByIdAsync(id);
+            var user = 
             if (order == null)
             {
                 return NotFound();
@@ -49,7 +52,7 @@ namespace PetHaven.Controllers
         [HttpPost]
         public async Task<ActionResult<Order>> CreateOrder(CreateOrderDTO order)
         {
-            order.UserId = GetCurrentUserId();  
+            order.UserId = GetCurrentUserId();
             var createdOrder = await _orderService.CreateOrderAsync(order);
             return CreatedAtAction(nameof(GetOrder), new { id = createdOrder.Id }, createdOrder);
         }
