@@ -47,8 +47,9 @@ namespace PetHaven.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Order>> CreateOrder(Order order)
+        public async Task<ActionResult<Order>> CreateOrder(CreateOrderDTO order)
         {
+            order.UserId = GetCurrentUserId();  
             var createdOrder = await _orderService.CreateOrderAsync(order);
             return CreatedAtAction(nameof(GetOrder), new { id = createdOrder.Id }, createdOrder);
         }

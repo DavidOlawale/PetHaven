@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 namespace PetHaven.Controllers
 {
     [ApiController]
-    [Route("api/pets")]
+    [Route("api/pet")]
     [Authorize]
     public class PetController : BaseController
     {

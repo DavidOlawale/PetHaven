@@ -1,4 +1,5 @@
-﻿using PetHaven.Data.Model;
+﻿using PetHaven.BusinessLogic.DTOs;
+using PetHaven.Data.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace PetHaven.BusinessLogic.Interfaces
         Task<IEnumerable<Order>> GetAllOrdersAsync();
         Task<Order?> GetOrderByIdAsync(int id);
         Task<IEnumerable<Order>> GetOrdersByUserIdAsync(int userId);
-        Task<Order> CreateOrderAsync(Order order);
+        Task<Order> CreateOrderAsync(CreateOrderDTO orderDto);
         Task<Order> UpdateOrderStatusAsync(int orderId, OrderStatus status);
         Task<bool> DeleteOrderAsync(int id);
     }

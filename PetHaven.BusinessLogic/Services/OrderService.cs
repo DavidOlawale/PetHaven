@@ -1,4 +1,5 @@
-﻿using PetHaven.BusinessLogic.Interfaces;
+﻿using PetHaven.BusinessLogic.DTOs;
+using PetHaven.BusinessLogic.Interfaces;
 using PetHaven.Data.Model;
 using PetHaven.Data.Repositories.Interfaces;
 using System;
@@ -36,10 +37,34 @@ namespace PetHaven.BusinessLogic.Services
             return await _orderRepository.GetByUserIdAsync(userId);
         }
 
-        public async Task<Order> CreateOrderAsync(Order order)
+        public async Task<Order> CreateOrderAsync(CreateOrderDTO orderDto)
         {
-            // Validate order items and calculate total
-            await ValidateOrderItems(order.Items);
+            
+            await ValidateOrderItems(orderDto.Items);
+
+            var order = new Order
+            {
+                TotalAmount = orderDto.TotalAmount,
+                ShippingAddress = orderDto.ShippingAddress,
+                UserId = orderDto.UserId,
+                OrderDate = DateTime.Now,
+                Status = OrderStatus.Pending
+            };
+
+            if (orderDto.Items != null)
+            {
+                foreach (var itemDto in orderDto.Items)
+                {
+                    var orderItem = new OrderItem
+                    {
+                        ProductId = itemDto.ProductId,
+                        Price = itemDto.Price,
+                        Quantity = itemDto.Quantity,
+                    };
+                    order.Items.Add(orderItem);
+                }
+            }
+
             order.TotalAmount = CalculateOrderTotal(order.Items);
             order.OrderDate = DateTime.UtcNow;
             order.Status = OrderStatus.Pending;
@@ -52,7 +77,7 @@ namespace PetHaven.BusinessLogic.Services
             var order = await _orderRepository.GetByIdAsync(orderId);
             if (order == null)
             {
-                throw new KeyNotFoundException($"Order with ID {orderId} not found");
+                throw new Exception($"Order with ID {orderId} not found");
             }
 
             ValidateStatusTransition(order.Status, status);
@@ -66,7 +91,7 @@ namespace PetHaven.BusinessLogic.Services
             var order = await _orderRepository.GetByIdAsync(id);
             if (order == null)
             {
-                throw new KeyNotFoundException($"Order with ID {id} not found");
+                throw new Exception($"Order with ID {id} not found");
             }
 
             // Only allow deletion of pending or cancelled orders
@@ -79,11 +104,11 @@ namespace PetHaven.BusinessLogic.Services
             return await _orderRepository.DeleteAsync(id);
         }
 
-        private async Task ValidateOrderItems(ICollection<OrderItem> items)
+        private async Task ValidateOrderItems(ICollection<CreateOrderItemDTO> items)
         {
-            if (items == null || !items.Any())
+            if (items == null || items.Count == 0)
             {
-                throw new ArgumentException("Order must contain at least one item");
+                throw new Exception("Order must contain at least one item");
             }
 
             foreach (var item in items)
@@ -91,7 +116,7 @@ namespace PetHaven.BusinessLogic.Services
                 var product = await _productRepository.GetByIdAsync(item.ProductId);
                 if (product == null)
                 {
-                    throw new KeyNotFoundException($"Product with ID {item.ProductId} not found");
+                    throw new Exception($"Product with ID {item.ProductId} not found");
                 }
 
                 if (product.Stock < item.Quantity)

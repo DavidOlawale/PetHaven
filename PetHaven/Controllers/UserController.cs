@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetHaven.BusinessLogic.DTOs.User;
 using PetHaven.BusinessLogic.Interfaces;
 using PetHaven.Data.Model;
@@ -8,6 +9,7 @@ namespace PetHaven.Controllers
 {
     [ApiController]
     [Route("api/user")]
+    [Authorize]
     public class UserController : BaseController
     {
         private readonly IUserService _userService;
@@ -20,7 +22,7 @@ namespace PetHaven.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(int id)
         {
-            var user = await _userService.GetUserByIdAsync(id);
+            var user = await _userService.GetUserByIdAsync(GetCurrentUserId());
             if (user == null)
             {
                 return NotFound();
@@ -38,6 +40,13 @@ namespace PetHaven.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpGet("me")]
+        public async Task<User?> GetCurrentUser()
+        {
+            var user = await _userService.GetUserByIdAsync(GetCurrentUserId());
+            return user;
         }
 
     }

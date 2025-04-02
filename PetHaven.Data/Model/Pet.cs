@@ -22,7 +22,7 @@ namespace PetHaven.Data.Model
         public string Breed { get; set; }
 
         [Required]
-        public int Weight { get; set; }
+        public double Weight { get; set; }
 
         public DateTime? DateOfBirth { get; set; }
 

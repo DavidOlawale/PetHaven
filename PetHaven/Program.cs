@@ -9,6 +9,7 @@ using PetHaven.Data.Repositories;
 using PetHaven.Data.Repositories.Interfaces;
 using System;
 using System.Text;
+using PetHaven.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,17 +57,21 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPetService, PetService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IPaymentService, PaystackPaymentService>();
 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPetRepository, PetRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+
+builder.Services.Configure<PaystackConfig>(builder.Configuration.GetSection("Paystack"));
 
 
 var app = builder.Build();
 
-// ato apply database migrations
+// TODO: apply database migrations
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;

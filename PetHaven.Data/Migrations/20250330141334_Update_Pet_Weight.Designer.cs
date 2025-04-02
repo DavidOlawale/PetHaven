@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetHaven.Data.Model;
 
@@ -11,9 +12,11 @@ using PetHaven.Data.Model;
 namespace PetHaven.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250330141334_Update_Pet_Weight")]
+    partial class Update_Pet_Weight
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -300,47 +303,6 @@ namespace PetHaven.Data.Migrations
                     b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("PetHaven.Data.Model.Payment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("GatewayResponse")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Reference")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("VerifiedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("Payments");
-                });
-
             modelBuilder.Entity("PetHaven.Data.Model.Pet", b =>
                 {
                     b.Property<int>("Id")
@@ -577,7 +539,7 @@ namespace PetHaven.Data.Migrations
                             Email = "pethaven_superadmin@gmail.com",
                             FirstName = "David",
                             LastName = "Olaniran",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJi6EeowVKxP0P2XwOLC4BP68P7hZioPe4CK6/6l/4h1KaCscC/x1Ge3cHjh9G+pMw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJiQD1bKZVo1G1sOJL+LFHvc8Qs44+g3xsQx4HPCM5FnVToMSMb57wt1J4LeWVFJTg==",
                             Role = "Administrator",
                             ZipCode = "10027"
                         });
@@ -681,17 +643,6 @@ namespace PetHaven.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("PetHaven.Data.Model.Payment", b =>
-                {
-                    b.HasOne("PetHaven.Data.Model.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("PetHaven.Data.Model.Pet", b =>

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetHaven.Data.Model;
 
@@ -11,9 +12,11 @@ using PetHaven.Data.Model;
 namespace PetHaven.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250401110754_Add_Table_Payments")]
+    partial class Add_Table_Payments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -319,6 +322,7 @@ namespace PetHaven.Data.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("GatewayResponse")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("OrderId")
@@ -577,7 +581,7 @@ namespace PetHaven.Data.Migrations
                             Email = "pethaven_superadmin@gmail.com",
                             FirstName = "David",
                             LastName = "Olaniran",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJi6EeowVKxP0P2XwOLC4BP68P7hZioPe4CK6/6l/4h1KaCscC/x1Ge3cHjh9G+pMw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPIR2u+MkfbQBorAF90OCE5ZMIp+8+nwhvVorMAlryFnlg5k7XGjcX6OxAqu0TccLw==",
                             Role = "Administrator",
                             ZipCode = "10027"
                         });
