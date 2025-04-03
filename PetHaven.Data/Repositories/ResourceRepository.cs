@@ -34,10 +34,11 @@ namespace PetHaven.Data.Repositories
             return resource;
         }
 
-        public async Task UpdateResourceAsync(Resource resource)
+        public async Task<Resource> UpdateResourceAsync(Resource resource)
         {
             _context.Resources.Update(resource);
             await _context.SaveChangesAsync();
+            return resource;
         }
 
         public async Task DeleteResourceAsync(int id)

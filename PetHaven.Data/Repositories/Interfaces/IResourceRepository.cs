@@ -9,7 +9,7 @@ namespace PetHaven.Data.Repositories.Interfaces
         Task<Resource?> GetResourceByIdAsync(int id);
         Task<List<Resource>> GetAllResourcesAsync();
         Task<Resource> AddResourceAsync(Resource resource);
-        Task UpdateResourceAsync(Resource resource);
+        Task<Resource> UpdateResourceAsync(Resource resource);
         Task DeleteResourceAsync(int id);
     }   
 }

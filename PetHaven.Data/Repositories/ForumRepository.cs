@@ -24,7 +24,9 @@ namespace PetHaven.Data.Repositories
 
         public async Task<List<ForumThread>> GetAllForumThreadsAsync()
         {
-            return await _context.ForumThreads.ToListAsync();
+            return await _context.ForumThreads
+                .Include(t => t.User)
+                .ToListAsync();
         }
 
         public async Task<ForumThread> AddForumThreadAsync(ForumThread thread)
@@ -59,7 +61,9 @@ namespace PetHaven.Data.Repositories
 
         public async Task<List<ForumComment>> GetForumCommentsByThreadIdAsync(int threadId)
         {
-            return await _context.ForumComments.Where(c => c.ForumThreadId == threadId).ToListAsync();
+            return await _context.ForumComments.Where(c => c.ForumThreadId == threadId)
+                .Include(c => c.User)
+                .ToListAsync();
         }
     }
 }

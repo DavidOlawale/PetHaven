@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetHaven.BusinessLogic.DTOs;
-using PetHaven.BusinessLogic.DTOs.User;
 using PetHaven.BusinessLogic.Interfaces;
 using PetHaven.Data.Model;
-using System.Collections;
-using System.ComponentModel.DataAnnotations;
 
 namespace PetHaven.Controllers
 {
@@ -34,8 +31,9 @@ namespace PetHaven.Controllers
         public async Task<ActionResult<Order>> GetOrder(int id)
         {
             var order = await _orderService.GetOrderByIdAsync(id);
-            var user = 
-            if (order == null)
+            var user = await _userService.GetUserByIdAsync(GetCurrentUserId());
+
+            if (order == null || order.UserId != user?.Id)
             {
                 return NotFound();
             }

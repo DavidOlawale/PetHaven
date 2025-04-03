@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetHaven.BusinessLogic.DTOs;
-using PetHaven.BusinessLogic.DTOs.User;
 using PetHaven.BusinessLogic.Interfaces;
 using PetHaven.Data.Model;
-using System.Collections;
-using System.ComponentModel.DataAnnotations;
 
 namespace PetHaven.Controllers
 {

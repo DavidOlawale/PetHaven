@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Paystack.Net.SDK.Transactions;
 using PetHaven.BusinessLogic.DTOs;
 using PetHaven.BusinessLogic.Interfaces;
 using PetHaven.Configurations;

@@ -58,6 +58,8 @@ builder.Services.AddScoped<IPetService, PetService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPaymentService, PaystackPaymentService>();
+builder.Services.AddScoped<IForumService, ForumService>();
+builder.Services.AddScoped<IResourceService, ResourceService>();
 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -65,6 +67,8 @@ builder.Services.AddScoped<IPetRepository, PetRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IForumRepository, ForumRepository>();
+builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
 
 builder.Services.Configure<PaystackConfig>(builder.Configuration.GetSection("Paystack"));
 
