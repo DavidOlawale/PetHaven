@@ -29,6 +29,8 @@ public class AppDbContext : DbContext
     public DbSet<Reminder> Reminders { get; set; }
     public DbSet<ForumThread> ForumThreads { get; set; }
     public DbSet<ForumComment> ForumComments { get; set; }
+    public DbSet<ChatBotMessage> ChatBotMessages { get; set; }
+    public DbSet<ChatBotHistory> ChatBotHistories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

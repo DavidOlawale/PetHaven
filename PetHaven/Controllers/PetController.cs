@@ -100,7 +100,7 @@ namespace PetHaven.Controllers
         }
 
 
-        [HttpPost("Appointments")]
+        [HttpGet("{petId}/Appointments")]
         public IEnumerable<Appointment> GetPetAppointments(int petId)
         {
             return _petService.GetPetAppointments(petId);

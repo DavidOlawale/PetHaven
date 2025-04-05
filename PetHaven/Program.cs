@@ -60,6 +60,7 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPaymentService, PaystackPaymentService>();
 builder.Services.AddScoped<IForumService, ForumService>();
 builder.Services.AddScoped<IResourceService, ResourceService>();
+builder.Services.AddScoped<IChatHistoryService, ChatHistoryService>();
 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -69,6 +70,7 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IForumRepository, ForumRepository>();
 builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
+builder.Services.AddScoped<IChatBotRepository, ChatBotHistoryRepository>();
 
 builder.Services.Configure<PaystackConfig>(builder.Configuration.GetSection("Paystack"));
 

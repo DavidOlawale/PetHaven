@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetHaven.Data.Model;
 
@@ -11,9 +12,11 @@ using PetHaven.Data.Model;
 namespace PetHaven.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250404075134_Add_ChatbotHistory_Tables")]
+    partial class Add_ChatbotHistory_Tables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,7 +101,7 @@ namespace PetHaven.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ChatBotHistoryId")
+                    b.Property<int?>("ChatBotHistoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -111,9 +114,14 @@ namespace PetHaven.Data.Migrations
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ChatBotHistoryId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ChatBotMessages");
                 });
@@ -633,7 +641,7 @@ namespace PetHaven.Data.Migrations
                             Email = "pethaven_superadmin@gmail.com",
                             FirstName = "David",
                             LastName = "Olaniran",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAWN0dBsKiFxynReJCsgR0wc2itnBJYXhWgeAmazOyFm2iHt5AWwYx8cfLgpw7/6Qw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFvqAMZ18QLf9+mO0f7s+1kK6MNdlA/eAR/pthzIYNFcP/5WJ9wWnJVDZzUcjIqETQ==",
                             Role = "Administrator",
                             ZipCode = "10027"
                         });
@@ -663,13 +671,17 @@ namespace PetHaven.Data.Migrations
 
             modelBuilder.Entity("PetHaven.Data.Model.ChatBotMessage", b =>
                 {
-                    b.HasOne("PetHaven.Data.Model.ChatBotHistory", "ChatBotHistory")
+                    b.HasOne("PetHaven.Data.Model.ChatBotHistory", null)
                         .WithMany("Messages")
-                        .HasForeignKey("ChatBotHistoryId")
+                        .HasForeignKey("ChatBotHistoryId");
+
+                    b.HasOne("PetHaven.Data.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ChatBotHistory");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PetHaven.Data.Model.Checkup", b =>
