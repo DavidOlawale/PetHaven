@@ -94,5 +94,32 @@ namespace PetHaven.BusinessLogic.Services
         {
             return _petRepository.GetPetAppointments(petId);
         }
+
+        public async Task<Immunization> UpdatePetImmunization(int immunizationId, Immunization immunization)
+        {
+            return await _petRepository.UpdatePetImmunization(immunizationId, immunization);
+        }
+        public async Task<Medication> UpdatePetMedication(int medicationId, Medication medication)
+        {
+            return await _petRepository.UpdatePetMedication(medicationId, medication);
+        }
+        public async Task<Appointment> UpdatePetAppointment(int appointmentId, Appointment appointment)
+        {
+            return await _petRepository.UpdatePetAppointment(appointmentId, appointment);
+        }
+
+
+        public async Task DeletePetImmunization(int immunizationId)
+        {
+            await _petRepository.DeletePetImmunization(immunizationId);
+        }
+        public async Task DeletePetMedication(int medicationId)
+        {
+            await _petRepository.DeletePetMedication(medicationId);
+        }
+        public async Task DeletePetAppointment(int appointmentId)
+        {
+            await _petRepository.DeletePetAppointment(appointmentId);
+        }
     }
 }

@@ -66,6 +66,8 @@ namespace PetHaven.Controllers
             return NoContent();
         }
 
+
+
         [HttpPost("Immunization")]
         public async Task<IActionResult> AddImmunization(Immunization immunization)
         {
@@ -78,6 +80,21 @@ namespace PetHaven.Controllers
         {
             return _petService.GetPetImmunizations(petId);
         }
+
+        [HttpPut("Immunization")]
+        public async Task<Immunization> UpdatePetImmunization(int petId, Immunization immunization)
+        {
+            return await _petService.UpdatePetImmunization(immunization.Id, immunization);
+        }
+
+        [HttpDelete("Immunization/{id}")]
+        public async Task<IActionResult> DeletePetImmunization(int id)
+        {
+            await _petService.DeletePetImmunization(id);
+            return NoContent();
+        }
+
+
 
         [HttpPost("Medication")]
         public async Task<IActionResult> AddMedication(Medication medication)
@@ -92,6 +109,22 @@ namespace PetHaven.Controllers
             return _petService.GetPetMedications(petId);
         }
 
+        [HttpPut("Medication")]
+        public async Task<Medication> UpdatePetMedication(int petId, Medication medication)
+        {
+            return await _petService.UpdatePetMedication(medication.Id, medication);
+        }
+
+        [HttpDelete("Medication/{id}")]
+        public async Task<IActionResult> DeletePetMedication(int id)
+        {
+            await _petService.DeletePetMedication(id);
+            return NoContent();
+        }
+
+
+
+
         [HttpPost("Appointment")]
         public async Task<IActionResult> AddAppointment(Appointment appointment)
         {
@@ -105,5 +138,20 @@ namespace PetHaven.Controllers
         {
             return _petService.GetPetAppointments(petId);
         }
+
+        [HttpPut("Appointment")]
+        public async Task<Appointment> UpdatePetAppointment(int petId, Appointment appointment)
+        {
+            return await _petService.UpdatePetAppointment(appointment.Id, appointment);
+        }
+
+        [HttpDelete("Appointment/{id}")]
+        public async Task<IActionResult> DeletePetAppointment(int id)
+        {
+            await _petService.DeletePetAppointment(id);
+            return NoContent();
+        }
+
+
     }
 }

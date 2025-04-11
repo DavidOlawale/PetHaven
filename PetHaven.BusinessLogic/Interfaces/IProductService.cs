@@ -14,7 +14,7 @@ namespace PetHaven.BusinessLogic.Interfaces
         Task<IEnumerable<Product>> GetAllProductsAsync();
         Task<Product?> GetProductByIdAsync(int id);
         Task<Product> CreateProductAsync(CreateProductDTO productDto);
-        Task<Product> UpdateProductAsync(Product product);
+        Task<Product> UpdateProductAsync(UpdateProductDto updateProductDto);
         Task<bool> DeleteProductAsync(int id);
         Task<IEnumerable<Product>> GetProductsByCategoryAsync(string category);
     }
