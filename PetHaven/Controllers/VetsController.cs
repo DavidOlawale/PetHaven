@@ -7,30 +7,22 @@ using PetHaven.Data.Model;
 namespace PetHaven.Controllers
 {
     [ApiController]
-    [Route("api/pet")]
+    [Route("api/vets")]
     [Authorize]
-    public class PetController : BaseController
+    public class VetsController : BaseController
     {
         private readonly IPetService _petService;
 
-        public PetController(IPetService petService)
+        public VetsController(IPetService petService)
         {
             _petService = petService;
         }
 
-        [HttpGet]
-        public IEnumerable<Pet> GetAllPet()
+        [HttpGet("{id}/patients")]
+        public IEnumerable<Pet> GetVetPatients(int id)
         {
             return _petService.GetAllPets();
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Pet>> GetPet(int id)
-        {
-            var pet = await _petService.GetPetByIdAsync(id);
-            if (pet == null) return NotFound();
-
-            return pet;
+           
         }
 
         [HttpGet("owner/{ownerId}")]

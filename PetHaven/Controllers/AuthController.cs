@@ -38,15 +38,7 @@ namespace PetHaven.Controllers
         [HttpPost("signup")]
         public async Task<IActionResult> SignUp(SignUpDTO request)
         {
-            var user = new User
-            { 
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                Email = request.Email,
-                ZipCode = request.ZipCode,
-                Role = UserRoles.PetOwner
-            };
-            var registeredUser = await _authService.RegisterAsync(user, request.Password);
+            var registeredUser = await _authService.RegisterAsync(request);
             var token = _jwtService.GenerateToken(registeredUser);
             return Ok(new { token });
         }

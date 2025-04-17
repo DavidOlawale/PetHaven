@@ -4,5 +4,6 @@
     {
         public static string PetOwner = "PetOwner";
         public static string Administrator = "Administrator";
+        public static string Veterinarian = "Veterinarian";
     }
 }

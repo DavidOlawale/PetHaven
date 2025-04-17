@@ -46,14 +46,14 @@ namespace PetHaven.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = nameof(UserRoles.Administrator))]
-        public async Task<IActionResult> UpdateProduct(int id, Product product)
+        public async Task<ActionResult<Product>> UpdateProduct(int id, [FromBody] UpdateProductDto productDto)
         {
-            if (id != product.Id)
+            if (id != productDto.Id)
             {
                 return BadRequest();
             }
 
-            var updatedProduct = await _productService.UpdateProductAsync(product);
+            var updatedProduct = await _productService.UpdateProductAsync(productDto);
             if (updatedProduct == null)
             {
                 return NotFound();

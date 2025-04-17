@@ -26,6 +26,11 @@ namespace PetHaven.BusinessLogic.Services
             return await _petRepository.GetPetByIdAsync(id);
         }
 
+        public IEnumerable<Pet> GetAllPets()
+        {
+            return _petRepository.GetAllPets();
+        }
+
         public async Task<List<Pet>> GetPetsByOwnerIdAsync(int ownerId)
         {
             return await _petRepository.GetPetsByOwnerIdAsync(ownerId);

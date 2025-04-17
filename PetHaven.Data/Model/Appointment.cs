@@ -12,7 +12,7 @@ namespace PetHaven.Data.Model
 
         [Required]
         [StringLength(50)]
-        public string AppointmentType { get; set; } // e.g., "Vaccination", "Dental"
+        public string AppointmentType { get; set; }
 
         [Required]
         public DateTime ScheduledDate { get; set; }
@@ -21,9 +21,11 @@ namespace PetHaven.Data.Model
         [StringLength(100)]
         public string Veterinarian { get; set; }
 
-        public string? Reason { get; set; } // e.g., "Annual checkup"
+        public string? Reason { get; set; }
 
-        public string? Notes { get; set; } // Preparation instructions
+        public string Venue { get; set; }
+
+        public string? Notes { get; set; }
 
         [Required]
         public bool IsCompleted { get; set; } = false;

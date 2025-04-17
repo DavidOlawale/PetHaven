@@ -22,5 +22,18 @@ namespace PetHaven.BusinessLogic.DTOs
         public string LastName { get; set; }
 
         public string ZipCode { get; set; }
+
+        [Required]
+        public string Role { get; set; }
+
+        public VeterinarianDetails? VeterinarianDetails { get; set; }
+    }
+
+    public class VeterinarianDetails
+    {
+        public string? LicenseNumber { get; set; }
+        public string? ClinicName { get; set; }
+        public string? Specialization { get; set; }
+
     }
 }

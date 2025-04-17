@@ -62,8 +62,35 @@ namespace PetHaven.BusinessLogic.Services
             return await _productRepository.CreateProductAsync(product);
         }
 
-        public async Task<Product> UpdateProductAsync(Product product)
+        public async Task<Product> UpdateProductAsync(UpdateProductDto updateProductDto)
         {
+            var newImageUrls = new List<string>();
+            foreach (var image in updateProductDto.NewImages!)
+            {
+                if (image != null && image.Length > 0)
+                {
+                    var imageUrl = await _blobService.UploadImageAsync(image);
+                    newImageUrls.Add(imageUrl);
+                }
+            }
+
+            var existingImages = updateProductDto.ExistingImageUrls.Split(',').ToList();
+            var combinedImages = existingImages.Concat(newImageUrls); // Add new images to existing one
+
+            var newImageUrlsString = string.Join(",", combinedImages);
+
+            var product = new Product
+            {
+                Name = updateProductDto.Name,
+                Description = updateProductDto.Description,
+                DiscountedPrice = updateProductDto.DiscountedPrice,
+                OriginalPrice = updateProductDto.OriginalPrice,
+                Category = updateProductDto.Category,
+                Stock = updateProductDto.Stock,
+                Brand = updateProductDto.Brand,
+                Weight = updateProductDto.Weight,
+                ImageUrls = newImageUrlsString
+            };
             return await _productRepository.UpdateProductAsync(product);
         }
 

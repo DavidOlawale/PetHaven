@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetHaven.Data.Model;
 
@@ -11,9 +12,11 @@ using PetHaven.Data.Model;
 namespace PetHaven.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250407213041_AddAppoinment_Venue")]
+    partial class AddAppoinment_Venue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -602,9 +605,6 @@ namespace PetHaven.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ClinicName")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -617,18 +617,12 @@ namespace PetHaven.Data.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("LicenseNumber")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Specialization")
                         .HasColumnType("longtext");
 
                     b.Property<string>("ZipCode")
@@ -646,7 +640,7 @@ namespace PetHaven.Data.Migrations
                             Email = "pethaven_superadmin@gmail.com",
                             FirstName = "David",
                             LastName = "Olaniran",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHTMpAKC0cqHbDLl+38ksnVKH2Wj6O1C3EuJ7yzEFNMTOGNm1qTKvnfzQDv68wN7Jw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHdORbpnFk2eNG0+NeI+lUAormIcAe6FHyc2GfJjGcYBbZVzojKQxfiwI6Ahm3RwfA==",
                             Role = "Administrator",
                             ZipCode = "10027"
                         });

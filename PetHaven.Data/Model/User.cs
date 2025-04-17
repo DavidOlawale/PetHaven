@@ -20,5 +20,9 @@ namespace PetHaven.Data.Model
         public string PasswordHash { get; set; }
 
         public string Role { get; set; }
+
+        public string? LicenseNumber { get; set; }
+        public string? ClinicName { get; set; }
+        public string? Specialization { get; set; }
     }
 }

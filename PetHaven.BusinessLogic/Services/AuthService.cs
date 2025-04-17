@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Identity;
+using PetHaven.BusinessLogic.DTOs;
 using PetHaven.BusinessLogic.Interfaces;
 using PetHaven.Data.Model;
 using PetHaven.Data.Repositories.Interfaces;
@@ -31,13 +33,33 @@ namespace PetHaven.BusinessLogic.Services
             return VerifyPasswordHash(user, password, user.PasswordHash);
         }
 
-        public async Task<User> RegisterAsync(User user, string password)
+        public async Task<User> RegisterAsync(SignUpDTO signUpDTO)
         {
-            if((await _userRepository.GetUserByEmailAsync(user.Email)) != null){
+            // Validate User role
+            if (signUpDTO.Role!= UserRoles.PetOwner && signUpDTO.Role != UserRoles.Veterinarian)
+            {
+                throw new Exception("Invalid role name");
+            }
+            var user = new User
+            {
+                FirstName = signUpDTO.FirstName,
+                LastName = signUpDTO.LastName,
+                Email = signUpDTO.Email,
+                ZipCode = signUpDTO.ZipCode,
+                Role = signUpDTO.Role
+            };
+
+            if (signUpDTO.Role == UserRoles.Veterinarian)
+            {
+                user.LicenseNumber = signUpDTO?.VeterinarianDetails?.LicenseNumber;
+                user.ClinicName = signUpDTO?.VeterinarianDetails?.ClinicName;
+                user.Specialization = signUpDTO?.VeterinarianDetails?.Specialization;
+            }
+            if ((await _userRepository.GetUserByEmailAsync(user.Email)) != null){
                 throw new Exception("Email already exists");
             }
 
-            var passwordHash = CreatePasswordHash(user, password);
+            var passwordHash = CreatePasswordHash(user, signUpDTO.Password);
             user.PasswordHash = passwordHash;
             
             await _userRepository.AddUserAsync(user);

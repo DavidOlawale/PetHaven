@@ -12,6 +12,7 @@ namespace PetHaven.BusinessLogic.Interfaces
     public interface IPetService
     {
         Task<Pet?> GetPetByIdAsync(int id);
+        IEnumerable<Pet> GetAllPets();
         Task<List<Pet>> GetPetsByOwnerIdAsync(int ownerId);
         Task<Pet> AddPetAsync(AddPetDTO pet);
         Task<Pet> UpdatePetAsync(Pet pet);
