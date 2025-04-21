@@ -2,7 +2,6 @@
 using PetHaven.Authentication;
 using PetHaven.BusinessLogic.DTOs;
 using PetHaven.BusinessLogic.Interfaces;
-using PetHaven.Data.Model;
 
 namespace PetHaven.Controllers
 {

@@ -94,6 +94,11 @@ namespace PetHaven.Data.Repositories
             return _context.Appointments.Where(i => i.PetId == petId).ToList();
         }
 
+        public IEnumerable<Appointment> GetAllPetAppointments()
+        {
+            return _context.Appointments.ToList();
+        }
+
 
         public async Task<Immunization> UpdatePetImmunization(int immunizationId, Immunization immunization)
         {

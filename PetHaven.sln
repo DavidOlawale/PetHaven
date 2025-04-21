@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetHaven.BusinessLogic", "P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetHaven.Data", "PetHaven.Data\PetHaven.Data.csproj", "{0312EEEA-8755-4AAA-B47E-C0AA9F236B6F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetHaven.Tests", "PetHaven.Tests\PetHaven.Tests.csproj", "{6D761063-9E2B-434F-B72C-A1D8634D73D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{0312EEEA-8755-4AAA-B47E-C0AA9F236B6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0312EEEA-8755-4AAA-B47E-C0AA9F236B6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0312EEEA-8755-4AAA-B47E-C0AA9F236B6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D761063-9E2B-434F-B72C-A1D8634D73D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D761063-9E2B-434F-B72C-A1D8634D73D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D761063-9E2B-434F-B72C-A1D8634D73D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D761063-9E2B-434F-B72C-A1D8634D73D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

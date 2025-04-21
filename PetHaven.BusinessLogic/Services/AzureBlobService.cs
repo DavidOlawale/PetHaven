@@ -4,8 +4,6 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using PetHaven.BusinessLogic.Interfaces;
 
 namespace PetHaven.BusinessLogic.Services
@@ -21,7 +19,7 @@ namespace PetHaven.BusinessLogic.Services
             _containerName = configuration["AzureBlobStorage:ContainerName"]!;
         }
 
-        public async Task<string> UploadImageAsync(Stream fileStream, string? fileName = null)
+        public virtual async Task<string> UploadImageAsync(Stream fileStream, string? fileName = null)
         {
             if (_connectionString == "---") // Azure connection string i not yet available
             {

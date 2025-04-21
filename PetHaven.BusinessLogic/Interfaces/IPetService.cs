@@ -25,6 +25,7 @@ namespace PetHaven.BusinessLogic.Interfaces
         IEnumerable<Immunization> GetPetImmunizations(int petId);
         IEnumerable<Medication> GetPetMedications(int petId);
         IEnumerable<Appointment> GetPetAppointments(int petId);
+        IEnumerable<Appointment> GetAllPetAppointments();
 
         public Task<Immunization> UpdatePetImmunization(int immunizationId, Immunization immunization);
         public Task<Medication> UpdatePetMedication(int medicationId, Medication medication);

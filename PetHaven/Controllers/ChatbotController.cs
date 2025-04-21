@@ -9,11 +9,11 @@ namespace PetHaven.Controllers
     [ApiController]
     [Route("api/chatbot")]
     [Authorize]
-    public class ChatHistoryController : ControllerBase
+    public class ChatBotController : ControllerBase
     {
         private readonly IChatHistoryService _chatHistoryService;
 
-        public ChatHistoryController(IChatHistoryService chatHistoryService)
+        public ChatBotController(IChatHistoryService chatHistoryService)
         {
             _chatHistoryService = chatHistoryService;
         }

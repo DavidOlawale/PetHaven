@@ -9,6 +9,7 @@ namespace PetHaven.Data.Repositories.Interfaces
 {
     public interface IUserRepository
     {
+        IEnumerable<User> GetAllUsers();
         Task<User?> GetUserByIdAsync(int id);
 
         Task<User?> GetUserByEmailAsync(string email);

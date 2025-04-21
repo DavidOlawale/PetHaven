@@ -1,13 +1,8 @@
-﻿using PetHaven.BusinessLogic.DTOs;
-using PetHaven.BusinessLogic.DTOs.User;
+﻿
+using PetHaven.BusinessLogic.DTOs;
 using PetHaven.BusinessLogic.Interfaces;
 using PetHaven.Data.Model;
 using PetHaven.Data.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetHaven.BusinessLogic.Services
 {
@@ -15,10 +10,12 @@ namespace PetHaven.BusinessLogic.Services
     {
         private readonly IPetRepository _petRepository;
         private readonly IAzureBlobService _blobService;
-        public PetService(IPetRepository petRepository, IAzureBlobService blobService)
+        private readonly IEmailService _emailService;
+        public PetService(IPetRepository petRepository, IAzureBlobService blobService, IEmailService emailService)
         {
             _petRepository = petRepository;
             _blobService = blobService;
+            _emailService = emailService;
         }
 
         public async Task<Pet?> GetPetByIdAsync(int id)
@@ -74,12 +71,18 @@ namespace PetHaven.BusinessLogic.Services
 
         public async Task<Immunization> AddPetImmunizationAsync(Immunization immunization)
         {
-            return await _petRepository.AddPetImmunizationAsync(immunization);
+            var dbImmunization =  await _petRepository.AddPetImmunizationAsync(immunization);
+            var pet = await GetPetByIdAsync(dbImmunization.PetId);
+            await _emailService.SendImmunizationNotificationAsync(pet.Owner, pet, dbImmunization);
+            return dbImmunization;
         }
 
         public async Task<Medication> AddPetMedicationAsync(Medication medication)
         {
-            return await _petRepository.AddPetMedicationAsync(medication);
+            var dbMedication = await _petRepository.AddPetMedicationAsync(medication);
+            var pet = await GetPetByIdAsync(dbMedication.PetId);
+            await _emailService.SendMedicationNotificationAsync(pet.Owner, pet, dbMedication);
+            return dbMedication;
         }
 
         public async Task<Appointment> AddPetAppointmentAsync(Appointment appointment)
@@ -98,6 +101,10 @@ namespace PetHaven.BusinessLogic.Services
         public IEnumerable<Appointment> GetPetAppointments(int petId)
         {
             return _petRepository.GetPetAppointments(petId);
+        }
+        public IEnumerable<Appointment> GetAllPetAppointments()
+        {
+            return _petRepository.GetAllPetAppointments();
         }
 
         public async Task<Immunization> UpdatePetImmunization(int immunizationId, Immunization immunization)

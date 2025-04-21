@@ -10,6 +10,7 @@ namespace PetHaven.BusinessLogic.Interfaces
 {
     public interface IUserService
     {
+        IEnumerable<User> GetAllUsers();
         Task<User?> GetUserByIdAsync(int id);
 
         Task<User?> GetUserByEmailAsync(string email);

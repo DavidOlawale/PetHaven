@@ -1,16 +1,8 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using PetHaven.BusinessLogic.DTOs;
 using PetHaven.BusinessLogic.Interfaces;
 using PetHaven.Data.Model;
 using PetHaven.Data.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetHaven.BusinessLogic.Services
 {
@@ -18,11 +10,13 @@ namespace PetHaven.BusinessLogic.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly PasswordHasher<User> _passwordHasher;
+        private readonly IEmailService _emailService;
 
-        public AuthService(IUserRepository userRepository)
+        public AuthService(IUserRepository userRepository, IEmailService emailService)
         {
             _userRepository = userRepository;
             _passwordHasher = new PasswordHasher<User>();
+            _emailService = emailService;
         }
 
         public async Task<bool> AuthenticateAsync(string email, string password)
@@ -63,6 +57,8 @@ namespace PetHaven.BusinessLogic.Services
             user.PasswordHash = passwordHash;
             
             await _userRepository.AddUserAsync(user);
+            await _emailService.SendSignupConfirmationAsync(user);
+
             return user;
         }
 
@@ -71,12 +67,12 @@ namespace PetHaven.BusinessLogic.Services
             return (await _userRepository.GetUserByEmailAsync(email)) != null;
         }
 
-        public string CreatePasswordHash(User user, string password)
+        public virtual string CreatePasswordHash(User user, string password)
         {
             return _passwordHasher.HashPassword(user, password);
         }
 
-        public bool VerifyPasswordHash(User user, string password, string passwordHash)
+        public virtual bool VerifyPasswordHash(User user, string password, string passwordHash)
         {
             var result = _passwordHasher.VerifyHashedPassword(user, passwordHash, password);
             return result == PasswordVerificationResult.Success || result == PasswordVerificationResult.SuccessRehashNeeded;

@@ -10,6 +10,8 @@ using PetHaven.Data.Repositories.Interfaces;
 using System;
 using System.Text;
 using PetHaven.Configurations;
+using Hangfire;
+using Hangfire.MySql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +63,7 @@ builder.Services.AddScoped<IPaymentService, PaystackPaymentService>();
 builder.Services.AddScoped<IForumService, ForumService>();
 builder.Services.AddScoped<IResourceService, ResourceService>();
 builder.Services.AddScoped<IChatHistoryService, ChatHistoryService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -71,6 +74,25 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IForumRepository, ForumRepository>();
 builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
 builder.Services.AddScoped<IChatBotRepository, ChatBotHistoryRepository>();
+
+builder.Services.AddHangfire(configuration => configuration
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseStorage(new MySqlStorage(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        new MySqlStorageOptions
+        {
+            TablesPrefix = "Hangfire_"
+        })));
+
+builder.Services.AddHangfireServer();
+
+//// In the Configure method
+//app.UseHangfireDashboard("/hangfire", new DashboardOptions
+//{
+//    Authorization = new[] { new HangfireAuthorizationFilter() }
+//});
 
 builder.Services.Configure<PaystackConfig>(builder.Configuration.GetSection("Paystack"));
 
