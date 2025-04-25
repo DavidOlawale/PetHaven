@@ -34,5 +34,8 @@ namespace PetHaven.BusinessLogic.Interfaces
         public Task DeletePetImmunization(int immunizationId);
         public Task DeletePetMedication(int medicationId);
         public Task DeletePetAppointment(int appointmentId);
+
+
+        public Task SendAppointmentReminderAsync(int appointmentId);
     }
 }

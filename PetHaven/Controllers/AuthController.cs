@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetHaven.Authentication;
 using PetHaven.BusinessLogic.DTOs;
 using PetHaven.BusinessLogic.Interfaces;
+using PetHaven.Data.Model;
 
 namespace PetHaven.Controllers
 {
@@ -11,19 +13,19 @@ namespace PetHaven.Controllers
     {
         private readonly IAuthService _authService;
         private readonly IJwtService _jwtService;
-        private readonly IUserService _UserService;
+        private readonly IUserService _userService;
 
         public AuthController(IAuthService authService, IUserService userService, IJwtService jwtService)
         {
             _authService = authService;
-            this._UserService = userService;
+            this._userService = userService;
             this._jwtService = jwtService;
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDTO request)
         {
-            var user = await _UserService.GetUserByEmailAsync(request.Email);
+            var user = await _userService.GetUserByEmailAsync(request.Email);
 
             if (user is not null && _authService.VerifyPasswordHash(user, request.Password, user!.PasswordHash))
             {
@@ -52,6 +54,7 @@ namespace PetHaven.Controllers
 
             return await _authService.CheckEmailExists(email);
         }
+
     }
 
 }

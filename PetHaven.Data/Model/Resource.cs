@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PetHaven.Data.Model
 {
@@ -23,12 +18,12 @@ namespace PetHaven.Data.Model
         public DateTime PublishedDate { get; set; }
 
         [MaxLength(50)]
-        public string Author { get; set; }
+        public string? Author { get; set; }
 
         [MaxLength(100)]
         public string Category { get; set; }
 
         public int CreatorId { get; set; }
-        public User Creator { get; set; }
+        public User? Creator { get; set; }
     }
 }

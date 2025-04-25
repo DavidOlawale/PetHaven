@@ -98,7 +98,7 @@ namespace PetHaven.Tests.Controllers
                 .ReturnsAsync(true);
 
             // Act
-            var result = await _controller.UpdateUser(userId, updateDto);
+            var result = await _controller.UpdateUser(updateDto);
 
             // Assert
             Assert.IsType<NoContentResult>(result);
@@ -119,7 +119,7 @@ namespace PetHaven.Tests.Controllers
                 .ReturnsAsync(false);
 
             // Act
-            var result = await _controller.UpdateUser(userId, updateDto);
+            var result = await _controller.UpdateUser(updateDto);
 
             // Assert
             Assert.IsType<NotFoundResult>(result);

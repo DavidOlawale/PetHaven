@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PetHaven.BusinessLogic.DTOs;
 using PetHaven.BusinessLogic.Interfaces;
 using PetHaven.Data.Model;
 
@@ -19,9 +18,9 @@ namespace PetHaven.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? category = null)
         {
-            var resources = await _resourceService.GetAllResourcesAsync();
+            var resources = await _resourceService.GetAllResourcesAsync(category);
             return Ok(resources);
         }
 

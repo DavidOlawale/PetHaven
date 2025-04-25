@@ -6,15 +6,11 @@ using PetHaven.BusinessLogic.DTOs;
 using PetHaven.BusinessLogic.Interfaces;
 using PetHaven.Controllers;
 using PetHaven.Data.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace PetHaven.Tests.Controllers
 {
-
     public class AuthControllerTests
     {
         private readonly Mock<IAuthService> _mockAuthService;
@@ -35,7 +31,7 @@ namespace PetHaven.Tests.Controllers
         {
             // Arrange
             var loginDto = new LoginDTO { Email = "test@gmail.com", Password = "password123#" };
-            var user = new Data.Model.User { Id = 1, Email = "test@gmail.com", PasswordHash = "ilwhabdou2nf" };
+            var user = new User { Id = 1, Email = "test@gmail.com", PasswordHash = "ilwhabdou2nf" };
             var token = "jwt-token";
 
             _mockUserService.Setup(s => s.GetUserByEmailAsync(loginDto.Email))
@@ -49,10 +45,6 @@ namespace PetHaven.Tests.Controllers
             var result = await _controller.Login(loginDto);
 
             // Assert
-            //var okResult = Assert.IsType<OkObjectResult>(result);
-            //dynamic tokenObject = okResult.Value;
-            //Assert.Equal(token, tokenObject?.token);
-
             var okResult = Assert.IsType<OkObjectResult>(result);
 
             // Convert to JObject for easier property access
@@ -65,7 +57,7 @@ namespace PetHaven.Tests.Controllers
         {
             // Arrange
             var loginDto = new LoginDTO { Email = "test@example.com", Password = "wrongpassword" };
-            var user = new Data.Model.User { Id = 1, Email = "test@example.com", PasswordHash = "ilwhabdou2nf" };
+            var user = new User { Id = 1, Email = "test@example.com", PasswordHash = "ilwhabdou2nf" };
 
             _mockUserService.Setup(s => s.GetUserByEmailAsync(loginDto.Email))
                 .ReturnsAsync(user);
@@ -83,7 +75,7 @@ namespace PetHaven.Tests.Controllers
         public async Task Login_WithNonExistentUser_ReturnsUnauthorized()
         {
             // Arrange
-            var loginDto = new LoginDTO { Email = "nknownuser@gmail.com", Password = "password123" };
+            var loginDto = new LoginDTO { Email = "unknownuser@gmail.com", Password = "password123" };
 
             _mockUserService.Setup(s => s.GetUserByEmailAsync(loginDto.Email))
                 .ReturnsAsync((User)null);
@@ -113,9 +105,22 @@ namespace PetHaven.Tests.Controllers
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
+            var resultObject = JObject.FromObject(okResult.Value);
+            Assert.Equal(token, resultObject["token"].ToString());
+        }
 
-            var resultObject = JObject.FromObject(okResult.Value!);
-            Assert.Equal(token, resultObject["token"]!.ToString());
+        [Fact]
+        public async Task SignUp_WhenRegistrationFails_ThrowsException()
+        {
+            // Arrange
+            var signUpDto = new SignUpDTO { Email = "existing@example.com", Password = "password123" };
+
+            _mockAuthService.Setup(s => s.RegisterAsync(signUpDto))
+                .ThrowsAsync(new Exception("Email already exists"));
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<Exception>(() => _controller.SignUp(signUpDto));
+            Assert.Equal("Email already exists", exception.Message);
         }
 
         [Fact]
@@ -161,6 +166,9 @@ namespace PetHaven.Tests.Controllers
 
             // Assert
             Assert.False(result);
+
+            // Verify that the service is never called with empty email
+            _mockAuthService.Verify(s => s.CheckEmailExists(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -174,6 +182,9 @@ namespace PetHaven.Tests.Controllers
 
             // Assert
             Assert.False(result);
+
+            // Verify that the service is never called with null email
+            _mockAuthService.Verify(s => s.CheckEmailExists(It.IsAny<string>()), Times.Never);
         }
     }
 }

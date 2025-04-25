@@ -12,5 +12,6 @@ namespace PetHaven.BusinessLogic.Interfaces
         Task SendSignupConfirmationAsync(User user);
         Task SendMedicationNotificationAsync(User petOwner, Pet pet, Medication medication);
         Task SendImmunizationNotificationAsync(User petOwner, Pet pet, Immunization immunization);
+        Task SendAppointmentReminderAsync(User petOwner, Pet pet, Appointment appointment);
     }
 }

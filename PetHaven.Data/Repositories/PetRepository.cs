@@ -94,6 +94,20 @@ namespace PetHaven.Data.Repositories
             return _context.Appointments.Where(i => i.PetId == petId).ToList();
         }
 
+        public async Task<Appointment?> GetPetAppointment(int id)
+        {
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment != null)
+            {
+                await _context.Entry(appointment)
+                    .Reference(p => p.Pet)
+                    .Query()
+                    .Include(p => p.Owner)
+                    .LoadAsync();
+            }
+            return appointment;
+        }
+
         public IEnumerable<Appointment> GetAllPetAppointments()
         {
             return _context.Appointments.ToList();

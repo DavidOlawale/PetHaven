@@ -98,7 +98,7 @@ namespace PetHaven.BusinessLogic.Templates
       <td style='font-family: sans-serif; font-size: 14px; vertical-align: top;' valign='top'>&nbsp;</td>
       <td class='container' style='font-family: sans-serif; font-size: 14px; vertical-align: top; display: block; max-width: 580px; padding: 10px; width: 580px; margin: 0 auto;' width='580' valign='top'>
         <div class='header' style='padding: 20px 0; text-align: center;'>
-          <img src='https://yourwebsite.com/assets/logo.png' width='200' height='60' alt='PetHaven Logo' style='border: none; -ms-interpolation-mode: bicubic; max-width: 100%; display: block; margin: 0 auto;'>
+          <img src='https://firebasestorage.googleapis.com/v0/b/pethaven-5b27b.firebasestorage.app/o/images%2FPethaven_logo.png?alt=media&token=fe05e7d5-f36f-459d-88f2-31480d8dd969' width='200' height='60' alt='PetHaven Logo' style='border: none; -ms-interpolation-mode: bicubic; max-width: 100%; display: block; margin: 0 auto;'>
         </div>
         <div class='content' style='box-sizing: border-box; display: block; margin: 0 auto; max-width: 580px; padding: 10px;'>
           <table role='presentation' class='main' style='border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background: #ffffff; border-radius: 12px; width: 100%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);' width='100%'>

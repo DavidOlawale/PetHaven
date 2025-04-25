@@ -44,8 +44,8 @@ namespace PetHaven.BusinessLogic.Services
                         IsBodyHtml = true
                     };
 
-                    //mailMessage.To.Add(to);
-                    mailMessage.To.Add("olawaledavid11@gmail.com");
+                    mailMessage.To.Add(to);
+                    //mailMessage.To.Add("olawaledavid11@gmail.com");
 
                     await client.SendMailAsync(mailMessage);
                     _logger.LogInformation($"Email sent to {to} successfully");
@@ -61,37 +61,29 @@ namespace PetHaven.BusinessLogic.Services
         public async Task SendSignupConfirmationAsync(User user)
         {
             var subject = "Welcome to PeHaven - Your Account Has Been Created";
-            var message = GetSignupEmailTemplate(user);
+            var message = SignupEmailTemplate.GetTemplate(user);
             await SendEmailAsync(user.Email, subject, message);
         }
 
         public async Task SendMedicationNotificationAsync(User petOwner, Pet pet, Medication medication)
         {
             var subject = $"New Medication Added for {pet.Name}";
-            var message = GetMedicationEmailTemplate(petOwner, pet, medication);
+            var message = MedicationEmailTemplate.GetTemplate(petOwner, pet, medication);
             await SendEmailAsync(petOwner.Email, subject, message);
         }
 
         public async Task SendImmunizationNotificationAsync(User petOwner, Pet pet, Immunization immunization)
         {
             var subject = $"New Immunization Record for {pet.Name}";
-            var message = GetImmunizationEmailTemplate(petOwner, pet, immunization);
+            var message = ImmunizationEmailTemplate.GetTemplate(petOwner, pet, immunization);
             await SendEmailAsync(petOwner.Email, subject, message);
         }
 
-        private string GetSignupEmailTemplate(User user)
+        public async Task SendAppointmentReminderAsync(User petOwner, Pet pet, Appointment appointment)
         {
-            return SignupEmailTemplate.GetTemplate(user);
-        }
-
-        private string GetMedicationEmailTemplate(User petOwner, Pet pet, Medication medication)
-        {
-            return MedicationEmailTemplate.GetTemplate(petOwner, pet, medication);
-        }
-
-        private string GetImmunizationEmailTemplate(User petOwner, Pet pet, Immunization immunization)
-        {
-            return ImmunizationEmailTemplate.GetTemplate(petOwner, pet, immunization);
+            var subject = $"Reminder: Appointment for {pet.Name} on {appointment.ScheduledDate.ToShortDateString()}";
+            var message = AppointmentReminderTemplate.GetTemplate(petOwner, pet, appointment);
+            await SendEmailAsync(petOwner.Email, subject, message);
         }
     }
 }

@@ -1,53 +1,57 @@
-﻿using Azure.Storage.Blobs.Models;
-using Azure.Storage.Blobs;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using PetHaven.BusinessLogic.Interfaces;
+﻿//using Firebase.Storage;
+//using Microsoft.Extensions.Configuration;
+//using System;
+//using System.IO;
+//using System.Threading.Tasks;
+//using PetHaven.BusinessLogic.Interfaces;
 
-namespace PetHaven.BusinessLogic.Services
-{
-    public class AzureBlobService: IAzureBlobService
-    {
-        private readonly string _connectionString;
-        private readonly string _containerName;
+//namespace PetHaven.BusinessLogic.Services
+//{
+//    public class FirebaseBlobService : IAzureBlobService
+//    {
+//        private readonly string _storageBucket;
+//        private readonly string _apiKey;
 
-        public AzureBlobService(IConfiguration configuration)
-        {
-            _connectionString = configuration["AzureBlobStorage:ConnectionString"]!;
-            _containerName = configuration["AzureBlobStorage:ContainerName"]!;
-        }
+//        public FirebaseBlobService(IConfiguration configuration)
+//        {
+//            _storageBucket = configuration["FirebaseStorage:StorageBucket"]!;
+//            _apiKey = configuration["FirebaseStorage:ApiKey"]!;
+//        }
 
-        public virtual async Task<string> UploadImageAsync(Stream fileStream, string? fileName = null)
-        {
-            if (_connectionString == "---") // Azure connection string i not yet available
-            {
-                return "https://www.princeton.edu/sites/default/files/styles/1x_full_2x_half_crop/public/images/2022/02/KOA_Nassau_2697x1517.jpg?itok=Bg2K7j7J";
-            }
+//        public virtual async Task<string> UploadImageAsync(Stream fileStream, string? fileName = null)
+//        {
+//            if (string.IsNullOrEmpty(_storageBucket)) // Firebase not yet configured
+//            {
+//                return "https://www.princeton.edu/sites/default/files/styles/1x_full_2x_half_crop/public/images/2022/02/KOA_Nassau_2697x1517.jpg?itok=Bg2K7j7J";
+//            }
 
-            if (string.IsNullOrEmpty(fileName))
-            {
-                var fileExtension = Path.GetExtension(fileName) ?? ".jpg";
-                fileName = $"{Guid.NewGuid()}{fileExtension}";
-            }
+//            if (string.IsNullOrEmpty(fileName))
+//            {
+//                var fileExtension = ".jpg";
+//                fileName = $"{Guid.NewGuid()}{fileExtension}";
+//            }
 
-            var blobClient = new BlobClient(_connectionString, _containerName, fileName);
+//            // Create a Firebase Storage instance
+//            var storage = new FirebaseStorage(_storageBucket);
 
-            await blobClient.UploadAsync(fileStream, new BlobHttpHeaders { ContentType = "image/jpeg" });
+//            // Upload the file
+//            var task = await storage
+//                .Child("images")
+//                .Child(fileName)
+//                .PutAsync(fileStream);
 
-            return blobClient.Uri.ToString();
-        }
+//            // Return the download URL
+//            return task;
+//        }
 
-        public async Task<string> UploadImageAsync(string image, string? fileName = null)
-        {
-            // Remove the prefix (e.g., "data:image/jpeg;base64,")
-            var base64Data = image.Split(',')[1];
-
-            // Convert Base64 to byte array
-            var imageBytes = Convert.FromBase64String(base64Data);
-            var imageStream = new MemoryStream(imageBytes);
-            return await UploadImageAsync(imageStream, fileName);
-        }
-    }
-}
+//        public async Task<string> UploadImageAsync(string image, string? fileName = null)
+//        {
+//            // Remove the prefix (e.g., "data:image/jpeg;base64,")
+//            var base64Data = image.Split(',')[1];
+//            // Convert Base64 to byte array
+//            var imageBytes = Convert.FromBase64String(base64Data);
+//            var imageStream = new MemoryStream(imageBytes);
+//            return await UploadImageAsync(imageStream, fileName);
+//        }
+//    }
+//}

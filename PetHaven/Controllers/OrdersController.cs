@@ -56,7 +56,7 @@ namespace PetHaven.Controllers
         }
 
         [HttpPut("{id}/status")]
-        public async Task<IActionResult> UpdateOrderStatus(int id, [FromBody] OrderStatus status)
+        public async Task<ActionResult<Order>> UpdateOrderStatus(int id, [FromBody] OrderStatus status)
         {
             var updatedOrder = await _orderService.UpdateOrderStatusAsync(id, status);
             if (updatedOrder == null)
@@ -64,7 +64,7 @@ namespace PetHaven.Controllers
                 return NotFound();
             }
 
-            return NoContent();
+            return updatedOrder;
         }
 
         [HttpDelete("{id}")]

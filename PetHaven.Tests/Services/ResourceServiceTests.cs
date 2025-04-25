@@ -3,18 +3,19 @@ using PetHaven.BusinessLogic.Services;
 using PetHaven.Data.Model;
 using PetHaven.Data.Repositories.Interfaces;
 using Xunit;
-
 namespace PetHaven.Tests.Services
 {
     public class ResourceServiceTests
     {
         private readonly Mock<IResourceRepository> _mockResourceRepository;
+        private readonly Mock<IUserRepository> _mockUserRepository;
         private readonly ResourceService _service;
 
         public ResourceServiceTests()
         {
             _mockResourceRepository = new Mock<IResourceRepository>();
-            _service = new ResourceService(_mockResourceRepository.Object);
+            _mockUserRepository = new Mock<IUserRepository>();
+            _service = new ResourceService(_mockResourceRepository.Object, _mockUserRepository.Object);
         }
 
         [Fact]
@@ -45,7 +46,7 @@ namespace PetHaven.Tests.Services
                 }
             };
 
-            _mockResourceRepository.Setup(r => r.GetAllResourcesAsync())
+            _mockResourceRepository.Setup(r => r.GetAllResourcesAsync(null))
                 .ReturnsAsync(expectedResources);
 
             // Act
@@ -53,7 +54,37 @@ namespace PetHaven.Tests.Services
 
             // Assert
             Assert.Equal(expectedResources, result);
-            _mockResourceRepository.Verify(r => r.GetAllResourcesAsync(), Times.Once);
+            _mockResourceRepository.Verify(r => r.GetAllResourcesAsync(null), Times.Once);
+        }
+
+        [Fact]
+        public async Task GetAllResourcesAsync_WithCategory_ReturnsFilteredResources()
+        {
+            // Arrange
+            string category = "Training";
+            var expectedResources = new List<Resource>
+            {
+                new Resource
+                {
+                    Id = 2,
+                    Title = "Dog Training 101",
+                    Content = "Basic dog training techniques...",
+                    PublishedDate = DateTime.UtcNow.AddDays(-5),
+                    Author = "Jane Smith",
+                    Category = "Training",
+                    CreatorId = 2
+                }
+            };
+
+            _mockResourceRepository.Setup(r => r.GetAllResourcesAsync(category))
+                .ReturnsAsync(expectedResources);
+
+            // Act
+            var result = await _service.GetAllResourcesAsync(category);
+
+            // Assert
+            Assert.Equal(expectedResources, result);
+            _mockResourceRepository.Verify(r => r.GetAllResourcesAsync(category), Times.Once);
         }
 
         [Fact]
@@ -88,7 +119,6 @@ namespace PetHaven.Tests.Services
         {
             // Arrange
             int resourceId = 999;
-
             _mockResourceRepository.Setup(r => r.GetResourceByIdAsync(resourceId))
                 .ReturnsAsync((Resource)null);
 
@@ -101,16 +131,24 @@ namespace PetHaven.Tests.Services
         }
 
         [Fact]
-        public async Task CreateResourceAsync_SetsPublishedDateAndCreatesResource()
+        public async Task CreateResourceAsync_SetsPublishedDateAndAuthorAndCreatesResource()
         {
             // Arrange
+            var creatorId = 1;
+            var user = new User
+            {
+                Id = creatorId,
+                FirstName = "John",
+                LastName = "Doe",
+                Email = "john.doe@example.com"
+            };
+
             var resourceToCreate = new Resource
             {
                 Title = "New Pet Nutrition Guide",
                 Content = "Comprehensive guide to pet nutrition...",
-                Author = "Admin User",
                 Category = "Nutrition",
-                CreatorId = 1
+                CreatorId = creatorId
             };
 
             Resource capturedResource = null;
@@ -119,11 +157,14 @@ namespace PetHaven.Tests.Services
                 Id = 3,
                 Title = resourceToCreate.Title,
                 Content = resourceToCreate.Content,
-                Author = resourceToCreate.Author,
                 Category = resourceToCreate.Category,
                 CreatorId = resourceToCreate.CreatorId,
-                PublishedDate = DateTime.UtcNow
+                PublishedDate = DateTime.UtcNow,
+                Author = "John Doe"
             };
+
+            _mockUserRepository.Setup(r => r.GetUserByIdAsync(creatorId))
+                .ReturnsAsync(user);
 
             _mockResourceRepository.Setup(r => r.AddResourceAsync(It.IsAny<Resource>()))
                 .Callback<Resource>(r => capturedResource = r)
@@ -139,9 +180,11 @@ namespace PetHaven.Tests.Services
             Assert.NotNull(capturedResource);
             Assert.Equal(resourceToCreate.Title, capturedResource.Title);
             Assert.Equal(resourceToCreate.Content, capturedResource.Content);
-            Assert.Equal(resourceToCreate.Author, capturedResource.Author);
             Assert.Equal(resourceToCreate.Category, capturedResource.Category);
             Assert.Equal(resourceToCreate.CreatorId, capturedResource.CreatorId);
+
+            // Verify Author was set correctly
+            Assert.Equal("John Doe", capturedResource.Author);
 
             // Verify PublishedDate was set
             Assert.NotEqual(default, capturedResource.PublishedDate);
@@ -150,6 +193,7 @@ namespace PetHaven.Tests.Services
             var timeDiff = DateTime.UtcNow - capturedResource.PublishedDate;
             Assert.True(timeDiff.TotalSeconds < 5);
 
+            _mockUserRepository.Verify(r => r.GetUserByIdAsync(creatorId), Times.Once);
             _mockResourceRepository.Verify(r => r.AddResourceAsync(It.IsAny<Resource>()), Times.Once);
         }
 
@@ -184,7 +228,6 @@ namespace PetHaven.Tests.Services
         {
             // Arrange
             int resourceId = 1;
-
             _mockResourceRepository.Setup(r => r.DeleteResourceAsync(resourceId))
                 .Returns(Task.CompletedTask);
 

@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using PetHaven.BusinessLogic.DTOs.User;
 using PetHaven.BusinessLogic.Interfaces;
+using PetHaven.BusinessLogic.Services;
 using PetHaven.Data.Model;
+using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 
 namespace PetHaven.Controllers
@@ -30,10 +32,10 @@ namespace PetHaven.Controllers
             return Ok(user);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser([Required] int id, [FromBody] UpdateUserDTO updatedUser)
+        [HttpPut]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDTO updatedUser)
         {
-            var result = await _userService.UpdateUserAsync(id, updatedUser);
+            var result = await _userService.UpdateUserAsync(GetCurrentUserId(), updatedUser);
             if (!result)
             {
                 return NotFound();
@@ -47,6 +49,32 @@ namespace PetHaven.Controllers
         {
             var user = await _userService.GetUserByIdAsync(GetCurrentUserId());
             return user;
+        }
+
+        [SwaggerIgnore]
+        [HttpPut("update-photo")]
+        public async Task<ActionResult<User>> UpdateUserPhoto([FromForm] IFormFile photo)
+        {
+            if (photo == null || photo.Length == 0)
+            {
+                return BadRequest("No file uploaded");
+            }
+
+            var userId = GetCurrentUserId();
+
+            // Only allow image files
+            if (!IsImageFile(photo.ContentType))
+            {
+                return BadRequest("File must be an image (JPEG, PNG, etc.)");
+            }
+
+            var updatedUser = await _userService.UpdateUserPhotoAsync(userId, photo);
+            return Ok(updatedUser);
+        }
+
+        private bool IsImageFile(string contentType)
+        {
+            return contentType.StartsWith("image/");
         }
 
     }

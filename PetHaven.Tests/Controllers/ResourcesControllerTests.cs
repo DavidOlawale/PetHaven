@@ -1,4 +1,7 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -41,7 +44,7 @@ namespace PetHaven.Tests.Controllers
         }
 
         [Fact]
-        public async Task GetAll_ReturnsOkWithAllResources()
+        public async Task GetAll_ReturnsOkWithAllResources_WhenNoCategoryProvided()
         {
             // Arrange
             var expectedResources = new List<Resource>
@@ -68,7 +71,7 @@ namespace PetHaven.Tests.Controllers
                 }
             };
 
-            _mockResourceService.Setup(s => s.GetAllResourcesAsync())
+            _mockResourceService.Setup(s => s.GetAllResourcesAsync(null))
                 .ReturnsAsync(expectedResources);
 
             // Act
@@ -78,6 +81,41 @@ namespace PetHaven.Tests.Controllers
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedResources = Assert.IsAssignableFrom<IEnumerable<Resource>>(okResult.Value);
             Assert.Equal(expectedResources, returnedResources);
+            _mockResourceService.Verify(s => s.GetAllResourcesAsync(null), Times.Once);
+        }
+
+        [Fact]
+        public async Task GetAll_ReturnsOkWithFilteredResources_WhenCategoryProvided()
+        {
+            // Arrange
+            string category = "Care";
+            var expectedResources = new List<Resource>
+            {
+                new Resource
+                {
+                    Id = 1,
+                    Title = "Pet Care Basics",
+                    Content = "Essential pet care information...",
+                    PublishedDate = DateTime.Now.AddDays(-10),
+                    Author = "John Doe",
+                    Category = "Care",
+                    CreatorId = 1
+                }
+            };
+
+            _mockResourceService.Setup(s => s.GetAllResourcesAsync(category))
+                .ReturnsAsync(expectedResources);
+
+            // Act
+            var result = await _controller.GetAll(category);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnedResources = Assert.IsAssignableFrom<IEnumerable<Resource>>(okResult.Value);
+            Assert.Equal(expectedResources, returnedResources);
+            Assert.Single(returnedResources);
+            Assert.Equal(category, returnedResources.First().Category);
+            _mockResourceService.Verify(s => s.GetAllResourcesAsync(category), Times.Once);
         }
 
         [Fact]
@@ -142,7 +180,7 @@ namespace PetHaven.Tests.Controllers
             // Assert
             var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result);
             Assert.Equal(nameof(ResourcesController.GetById), createdAtActionResult.ActionName);
-            Assert.Equal(createdResource.Id, createdAtActionResult.RouteValues!["id"]);
+            Assert.Equal(createdResource.Id, createdAtActionResult.RouteValues["id"]);
 
             var returnedResource = Assert.IsType<Resource>(createdAtActionResult.Value);
             Assert.Equal(createdResource, returnedResource);

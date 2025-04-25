@@ -20,7 +20,9 @@ namespace PetHaven.Data.Repositories
         public async Task<IEnumerable<Order>> GetAllAsync()
         {
             return await _context.Orders
-                .Include(o => o.Items) 
+                .Include(o => o.User)
+                .Include(o => o.Items)
+                .ThenInclude(i => i.Product)
                 .AsNoTracking() 
                 .ToListAsync();
         }

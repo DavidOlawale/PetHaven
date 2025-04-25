@@ -11,6 +11,7 @@ namespace PetHaven.BusinessLogic.DTOs.User
         public string? FirstName { get; set; }
 
         public string? LastName { get; set; }
+        public string? PhoneNumber { get; set; }
 
         public string? ZipCode { get; set; }
 

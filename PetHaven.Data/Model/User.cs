@@ -19,6 +19,10 @@ namespace PetHaven.Data.Model
 
         public string PasswordHash { get; set; }
 
+        public string? PhoneNumber { get; set; }
+
+        public string? photoUrl { get; set; }
+
         public string Role { get; set; }
 
         public string? LicenseNumber { get; set; }

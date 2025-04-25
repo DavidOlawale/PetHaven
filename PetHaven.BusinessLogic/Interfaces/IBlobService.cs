@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PetHaven.BusinessLogic.Interfaces
 {
-    public interface IAzureBlobService
+    public interface IBlobService
     {
         Task<string> UploadImageAsync(Stream fileStream, string? fileName = null);
         Task<string> UploadImageAsync(string image, string? fileName = null);

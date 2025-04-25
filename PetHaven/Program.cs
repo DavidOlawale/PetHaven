@@ -54,7 +54,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IAzureBlobService, AzureBlobService>();
+builder.Services.AddScoped<IBlobService, FirebaseBlobService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPetService, PetService>();
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -75,29 +75,28 @@ builder.Services.AddScoped<IForumRepository, ForumRepository>();
 builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
 builder.Services.AddScoped<IChatBotRepository, ChatBotHistoryRepository>();
 
-builder.Services.AddHangfire(configuration => configuration
-    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-    .UseSimpleAssemblyNameTypeSerializer()
+builder.Services.AddHangfire(configuration => configuration 
     .UseRecommendedSerializerSettings()
     .UseStorage(new MySqlStorage(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlStorageOptions
         {
-            TablesPrefix = "Hangfire_"
+            TablesPrefix = "Hangfire_",
+            PrepareSchemaIfNecessary = true
         })));
 
 builder.Services.AddHangfireServer();
-
-//// In the Configure method
-//app.UseHangfireDashboard("/hangfire", new DashboardOptions
-//{
-//    Authorization = new[] { new HangfireAuthorizationFilter() }
-//});
 
 builder.Services.Configure<PaystackConfig>(builder.Configuration.GetSection("Paystack"));
 
 
 var app = builder.Build();
+
+// In the Configure method
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    //Authorization = new[] { new HangfireAuthorizationFilter() }
+});
 
 // TODO: apply database migrations
 using (var scope = app.Services.CreateScope())

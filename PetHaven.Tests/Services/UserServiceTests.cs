@@ -1,5 +1,6 @@
 ﻿using Moq;
 using PetHaven.BusinessLogic.DTOs.User;
+using PetHaven.BusinessLogic.Interfaces;
 using PetHaven.BusinessLogic.Services;
 using PetHaven.Data.Model;
 using PetHaven.Data.Repositories.Interfaces;
@@ -9,12 +10,14 @@ namespace PetHaven.Tests.Services
     public class UserServiceTests
     {
         private readonly Mock<IUserRepository> _mockUserRepository;
+        private readonly Mock<IBlobService> _mockAzureBlobService;
         private readonly UserService _service;
 
         public UserServiceTests()
         {
             _mockUserRepository = new Mock<IUserRepository>();
-            _service = new UserService(_mockUserRepository.Object);
+            _mockAzureBlobService = new Mock<IBlobService>();
+            _service = new UserService(_mockUserRepository.Object, _mockAzureBlobService.Object);
         }
 
         [Fact]

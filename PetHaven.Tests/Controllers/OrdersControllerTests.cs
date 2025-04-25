@@ -1,4 +1,7 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -23,7 +26,7 @@ namespace PetHaven.Tests.Controllers
             _mockUserService = new Mock<IUserService>();
             _controller = new OrdersController(_mockOrderService.Object, _mockUserService.Object);
 
-            // simulate authenticated user
+            // Simulate authenticated user
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, _testUserId.ToString())
@@ -249,7 +252,7 @@ namespace PetHaven.Tests.Controllers
         }
 
         [Fact]
-        public async Task UpdateOrderStatus_ReturnsNoContent_WhenOrderExists()
+        public async Task UpdateOrderStatus_ReturnsOrderObject_WhenOrderExists()
         {
             // Arrange
             int orderId = 1;
@@ -258,7 +261,9 @@ namespace PetHaven.Tests.Controllers
             {
                 Id = orderId,
                 UserId = _testUserId,
-                Status = newStatus
+                Status = newStatus,
+                TotalAmount = 100.00m,
+                OrderDate = DateTime.UtcNow
             };
 
             _mockOrderService.Setup(s => s.UpdateOrderStatusAsync(orderId, newStatus))
@@ -268,7 +273,10 @@ namespace PetHaven.Tests.Controllers
             var result = await _controller.UpdateOrderStatus(orderId, newStatus);
 
             // Assert
-            Assert.IsType<NoContentResult>(result);
+            var actionResult = Assert.IsType<ActionResult<Order>>(result);
+            var returnedOrder = Assert.IsType<Order>(actionResult.Value);
+            Assert.Equal(updatedOrder, returnedOrder);
+            Assert.Equal(newStatus, returnedOrder.Status);
         }
 
         [Fact]
@@ -285,7 +293,8 @@ namespace PetHaven.Tests.Controllers
             var result = await _controller.UpdateOrderStatus(orderId, newStatus);
 
             // Assert
-            Assert.IsType<NotFoundResult>(result);
+            var actionResult = Assert.IsType<ActionResult<Order>>(result);
+            Assert.IsType<NotFoundResult>(actionResult.Result);
         }
 
         [Fact]

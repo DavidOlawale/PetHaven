@@ -15,13 +15,13 @@ namespace PetHaven.Tests.Services
     public class ProductServiceTests
     {
         private readonly Mock<IProductRepository> _mockProductRepository;
-        private readonly Mock<IAzureBlobService> _mockBlobService;
+        private readonly Mock<IBlobService> _mockBlobService;
         private readonly ProductService _service;
 
         public ProductServiceTests()
         {
             _mockProductRepository = new Mock<IProductRepository>();
-            _mockBlobService = new Mock<IAzureBlobService>();
+            _mockBlobService = new Mock<IBlobService>();
             _service = new ProductService(_mockProductRepository.Object, _mockBlobService.Object);
         }
 

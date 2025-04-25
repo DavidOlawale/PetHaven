@@ -6,7 +6,7 @@ namespace PetHaven.BusinessLogic.Templates
     {
         public static string GetTemplate(User petOwner, Pet pet, Appointment appointment)
         {
-            var petProfileUrl = $"https://petcareportal.com/pets/{pet.Id}";
+            var petProfileUrl = pet.PhotoUrl;
             var petTypeString = pet.Type.ToString();
             
             var timeUntilAppointment = appointment.ScheduledDate - DateTime.Now;

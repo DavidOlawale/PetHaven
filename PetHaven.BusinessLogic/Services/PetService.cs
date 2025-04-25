@@ -1,4 +1,5 @@
 ﻿
+using Hangfire;
 using PetHaven.BusinessLogic.DTOs;
 using PetHaven.BusinessLogic.Interfaces;
 using PetHaven.Data.Model;
@@ -9,9 +10,9 @@ namespace PetHaven.BusinessLogic.Services
     public class PetService : IPetService
     {
         private readonly IPetRepository _petRepository;
-        private readonly IAzureBlobService _blobService;
+        private readonly IBlobService _blobService;
         private readonly IEmailService _emailService;
-        public PetService(IPetRepository petRepository, IAzureBlobService blobService, IEmailService emailService)
+        public PetService(IPetRepository petRepository, IBlobService blobService, IEmailService emailService)
         {
             _petRepository = petRepository;
             _blobService = blobService;
@@ -74,7 +75,9 @@ namespace PetHaven.BusinessLogic.Services
             var dbImmunization =  await _petRepository.AddPetImmunizationAsync(immunization);
             var pet = await GetPetByIdAsync(dbImmunization.PetId);
             await _emailService.SendImmunizationNotificationAsync(pet.Owner, pet, dbImmunization);
-            return dbImmunization;
+            immunization.Pet = null; // Prevent objct circle error
+            immunization.Id = dbImmunization.Id;
+            return immunization;
         }
 
         public async Task<Medication> AddPetMedicationAsync(Medication medication)
@@ -82,12 +85,35 @@ namespace PetHaven.BusinessLogic.Services
             var dbMedication = await _petRepository.AddPetMedicationAsync(medication);
             var pet = await GetPetByIdAsync(dbMedication.PetId);
             await _emailService.SendMedicationNotificationAsync(pet.Owner, pet, dbMedication);
-            return dbMedication;
+            medication.Id = dbMedication.Id;
+            return medication;
         }
 
         public async Task<Appointment> AddPetAppointmentAsync(Appointment appointment)
         {
-            return await _petRepository.AddPetAppointmentAsync(appointment);
+            var dbAppointment = await _petRepository.AddPetAppointmentAsync(appointment);
+            appointment.Id = dbAppointment.Id;
+
+            try
+            {
+                var pet = await _petRepository.GetPetByIdAsync(appointment.PetId);
+
+                // Calculate the reminder time (3 hours before the appointment)
+                var reminderTime = appointment.ScheduledDate.AddHours(-3);
+
+                // Schedule the reminder email using Hangfire
+
+                BackgroundJob.Schedule<IPetService>(
+                service => service.SendAppointmentReminderAsync(dbAppointment.Id),
+                reminderTime - DateTime.UtcNow);
+
+            }
+            catch (Exception ex)
+            {
+                
+            }
+
+            return appointment;
         }
 
         public IEnumerable<Immunization> GetPetImmunizations(int petId)
@@ -132,6 +158,12 @@ namespace PetHaven.BusinessLogic.Services
         public async Task DeletePetAppointment(int appointmentId)
         {
             await _petRepository.DeletePetAppointment(appointmentId);
+        }
+
+        public async Task SendAppointmentReminderAsync(int appointmentId)
+        {
+            var appointment = await _petRepository.GetPetAppointment(appointmentId);
+            await _emailService.SendAppointmentReminderAsync(appointment.Pet.Owner, appointment.Pet, appointment);
         }
     }
 }

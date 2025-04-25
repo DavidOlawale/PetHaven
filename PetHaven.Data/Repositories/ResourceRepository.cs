@@ -22,9 +22,16 @@ namespace PetHaven.Data.Repositories
             return await _context.Resources.FindAsync(id);
         }
 
-        public async Task<List<Resource>> GetAllResourcesAsync()
+        public async Task<List<Resource>> GetAllResourcesAsync(string? category = null)
         {
-            return await _context.Resources.ToListAsync();
+            var query = _context.Resources.AsQueryable();
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                query = query.Where(r => r.Category == category);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<Resource> AddResourceAsync(Resource resource)
@@ -36,7 +43,12 @@ namespace PetHaven.Data.Repositories
 
         public async Task<Resource> UpdateResourceAsync(Resource resource)
         {
-            _context.Resources.Update(resource);
+            var dbResource = await GetResourceByIdAsync(resource.Id);
+            dbResource.Title = resource.Title;
+            dbResource.Content = resource.Content;
+            dbResource.Category = resource.Category;
+            dbResource.ImageUrl = resource.ImageUrl;
+            _context.Resources.Update(dbResource);
             await _context.SaveChangesAsync();
             return resource;
         }

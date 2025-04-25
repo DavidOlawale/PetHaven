@@ -14,9 +14,9 @@ namespace PetHaven.BusinessLogic.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
-        private readonly IAzureBlobService _blobService;
+        private readonly IBlobService _blobService;
 
-        public ProductService(IProductRepository productRepository, IAzureBlobService blobService)
+        public ProductService(IProductRepository productRepository, IBlobService blobService)
         {
             _productRepository = productRepository;
             _blobService = blobService;
@@ -81,6 +81,7 @@ namespace PetHaven.BusinessLogic.Services
 
             var product = new Product
             {
+                Id = updateProductDto.Id,
                 Name = updateProductDto.Name,
                 Description = updateProductDto.Description,
                 DiscountedPrice = updateProductDto.DiscountedPrice,
